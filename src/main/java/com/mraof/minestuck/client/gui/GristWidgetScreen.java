@@ -5,7 +5,7 @@ import com.mraof.minestuck.MinestuckConfig;
 import com.mraof.minestuck.client.util.GuiUtil;
 import com.mraof.minestuck.inventory.GristWidgetContainer;
 import com.mraof.minestuck.item.crafting.alchemy.GristSet;
-import com.mraof.minestuck.tileentity.GristWidgetTileEntity;
+import com.mraof.minestuck.tileentity.machine.GristWidgetTileEntity;
 import com.mraof.minestuck.world.storage.ClientPlayerData;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -60,8 +60,8 @@ public class GristWidgetScreen extends MachineScreen<GristWidgetContainer>
 			GuiUtil.drawGristBoard(set, GuiUtil.GristboardMode.GRIST_WIDGET, 9, 45, font);
 			
 			int cost = GristWidgetTileEntity.getGristWidgetBoondollarValue(set);
-			long has = ClientPlayerData.boondollars;
-			String costText = GuiUtil.addSuffix(cost)+"£("+GuiUtil.addSuffix(has)+")";
+			long has = ClientPlayerData.getBoondollars();
+			String costText = GuiUtil.addSuffix(cost)+"\u00a3("+GuiUtil.addSuffix(has)+")";
 			font.drawString(costText, xSize - 9 - font.getStringWidth(costText), ySize - 96 + 3, cost > has ? 0xFF0000 : 0x00FF00);
 			
 			List<String> tooltip = GuiUtil.getGristboardTooltip(set, GuiUtil.GristboardMode.GRIST_WIDGET, mouseX - this.guiLeft, mouseY - this.guiTop, 9, 45, font);
@@ -104,7 +104,7 @@ public class GristWidgetScreen extends MachineScreen<GristWidgetContainer>
 		
 		goButton = new GoButton((width - xSize) / 2 + goX, (height - ySize) / 2 + goY, 30, 12, container.overrideStop() ? "STOP" : "GO");
 		addButton(goButton);
-		if(MinestuckConfig.disableGristWidget.get())
+		if(MinestuckConfig.SERVER.disableGristWidget.get())
 			goButton.active = false;
 	}
 }

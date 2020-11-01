@@ -10,7 +10,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,6 +29,7 @@ public class GristType extends ForgeRegistryEntry<GristType> implements Comparab
 	
 	private final float rarity;
 	private final float value;
+	private final boolean underlingType;
 	private final Supplier<ItemStack> candyItem;
 	private final List<Supplier<GristType>> secondaryTypes;
 	private String translationKey;
@@ -39,6 +39,7 @@ public class GristType extends ForgeRegistryEntry<GristType> implements Comparab
 	{
 		rarity = properties.rarity;
 		value = properties.value;
+		underlingType = properties.isUnderlingType;
 		candyItem = properties.candyItem;
 		secondaryTypes = ImmutableList.copyOf(properties.secondaryGristTypes);
 	}
@@ -58,7 +59,7 @@ public class GristType extends ForgeRegistryEntry<GristType> implements Comparab
 	public String getTranslationKey()
 	{
 		if(translationKey == null)
-			translationKey = Util.makeTranslationKey("grist", GristTypes.REGISTRY.getKey(this));
+			translationKey = Util.makeTranslationKey("grist", GristTypes.getRegistry().getKey(this));
 		
 		return translationKey;
 	}
@@ -89,6 +90,11 @@ public class GristType extends ForgeRegistryEntry<GristType> implements Comparab
 		return value;
 	}
 	
+	public boolean isUnderlingType()
+	{
+		return underlingType;
+	}
+	
 	public ResourceLocation getIcon()
 	{
 		if(icon == null)
@@ -99,7 +105,7 @@ public class GristType extends ForgeRegistryEntry<GristType> implements Comparab
 	
 	public ResourceLocation getEffectiveName()
 	{
-		ResourceLocation name = GristTypes.REGISTRY.getKey(this);
+		ResourceLocation name = GristTypes.getRegistry().getKey(this);
 		if(name == null)
 			return new ResourceLocation(Minestuck.MOD_ID, "dummy");
 		else return name;
@@ -113,11 +119,6 @@ public class GristType extends ForgeRegistryEntry<GristType> implements Comparab
 	public List<GristType> getSecondaryTypes()
 	{
 		return secondaryTypes.stream().map(Supplier::get).collect(Collectors.toList());
-	}
-	
-	public int getId()
-	{
-		return ((ForgeRegistry<GristType>) GristTypes.REGISTRY).getID(this);	//TODO Not ideal. Find a better solution
 	}
 	
 	/**
@@ -145,7 +146,12 @@ public class GristType extends ForgeRegistryEntry<GristType> implements Comparab
 	@Override
 	public int compareTo(GristType gristType)
 	{
-		return this.getId() - gristType.getId();
+		if(this.rarity > gristType.rarity)
+			return -1;
+		else if(this.rarity < gristType.rarity)
+			return 1;
+		else return Objects.requireNonNull(this.getRegistryName()).getPath()
+					.compareTo(Objects.requireNonNull(gristType.getRegistryName()).getPath());
 	}
 	
 	public final void write(CompoundNBT nbt, String key)
@@ -166,7 +172,7 @@ public class GristType extends ForgeRegistryEntry<GristType> implements Comparab
 		ResourceLocation name = MSNBTUtil.tryReadResourceLocation(nbt, key);
 		if(name != null)
 		{
-			GristType type = GristTypes.REGISTRY.getValue(name);
+			GristType type = GristTypes.getRegistry().getValue(name);
 			if(type != null)
 				return type;
 			else LOGGER.warn("Couldn't find grist type by name {}  while reading from nbt. Will fall back to {} instead.", name, fallback);
@@ -197,6 +203,7 @@ public class GristType extends ForgeRegistryEntry<GristType> implements Comparab
 	public static class Properties
 	{
 		private final float rarity, value;
+		private boolean isUnderlingType = true;
 		private Supplier<ItemStack> candyItem = () -> ItemStack.EMPTY;
 		private final List<Supplier<GristType>> secondaryGristTypes = new ArrayList<>();
 		
@@ -209,6 +216,12 @@ public class GristType extends ForgeRegistryEntry<GristType> implements Comparab
 		{
 			this.rarity = rarity;
 			this.value = value;
+		}
+		
+		public Properties notUnderlingType()
+		{
+			isUnderlingType = false;
+			return this;
 		}
 		
 		public Properties candy(Supplier<Item> item)

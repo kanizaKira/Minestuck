@@ -10,6 +10,7 @@ import com.mraof.minestuck.world.biome.MSBiomes;
 import com.mraof.minestuck.world.gen.LandGenSettings;
 import com.mraof.minestuck.world.gen.feature.MSFeatures;
 import com.mraof.minestuck.world.gen.feature.structure.blocks.StructureBlockRegistry;
+import com.mraof.minestuck.world.gen.feature.structure.village.ConsortVillageCenter;
 import com.mraof.minestuck.world.lands.LandProperties;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -21,6 +22,8 @@ import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.placement.*;
+
+import java.util.Random;
 
 public class RockLandType extends TerrainLandType
 {
@@ -153,6 +156,20 @@ public class RockLandType extends TerrainLandType
 	public EntityType<? extends ConsortEntity> getConsortType()
 	{
 		return MSEntityTypes.NAKAGATOR;
+	}
+	
+	@Override
+	public void addVillageCenters(CenterRegister register)
+	{
+		addNakagatorVillageCenters(register);
+		
+		register.add(ConsortVillageCenter.RockCenter::new, 5);
+	}
+	
+	@Override
+	public void addVillagePieces(PieceRegister register, Random random)
+	{
+		addNakagatorVillagePieces(register, random);
 	}
 	
 	public enum Variant

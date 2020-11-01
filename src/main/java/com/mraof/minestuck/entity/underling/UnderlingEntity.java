@@ -15,6 +15,7 @@ import com.mraof.minestuck.player.PlayerIdentifier;
 import com.mraof.minestuck.skaianet.UnderlingController;
 import com.mraof.minestuck.util.Debug;
 import com.mraof.minestuck.util.MSTags;
+import com.mraof.minestuck.world.storage.PlayerSavedData;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
@@ -106,7 +107,7 @@ public abstract class UnderlingEntity extends MinestuckEntity implements IMob
 	
 	protected void applyGristType(GristType type)
 	{
-		if(type.getRarity() == 0)	//Utility grist type
+		if(!type.isUnderlingType())	//Utility grist type
 			throw new IllegalArgumentException("Can't set underling grist type to "+type.getRegistryName());
 		dataManager.set(GRIST_TYPE, String.valueOf(type.getRegistryName()));
 		
@@ -136,7 +137,7 @@ public abstract class UnderlingEntity extends MinestuckEntity implements IMob
 	@Nonnull
 	public GristType getGristType()
 	{
-		GristType type = GristTypes.REGISTRY.getValue(ResourceLocation.tryCreate(dataManager.get(GRIST_TYPE)));
+		GristType type = GristTypes.getRegistry().getValue(ResourceLocation.tryCreate(dataManager.get(GRIST_TYPE)));
 		
 		if(type != null)
 		{
@@ -191,6 +192,16 @@ public abstract class UnderlingEntity extends MinestuckEntity implements IMob
 			if(this.rand.nextInt(4) == 0)
 				this.world.addEntity(new VitalityGelEntity(world, randX(), this.getPosY(), randZ(), this.getVitalityGel()));
 		}
+	}
+	
+	@Override
+	public void onDeath(DamageSource cause)
+	{
+		LivingEntity entity = this.getAttackingEntity();
+		if(entity instanceof ServerPlayerEntity)
+			PlayerSavedData.getData((ServerPlayerEntity) entity).addConsortReputation(1);
+		
+		super.onDeath(cause);
 	}
 	
 	private double randX()

@@ -19,7 +19,7 @@ import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.FrequencyConfig;
 import net.minecraft.world.gen.placement.Placement;
 
-import static com.mraof.minestuck.MinestuckConfig.*;
+import java.util.Random;
 
 public class HeatLandType extends TerrainLandType
 {
@@ -110,5 +110,17 @@ public class HeatLandType extends TerrainLandType
 	public EntityType<? extends ConsortEntity> getConsortType()
 	{
 		return MSEntityTypes.NAKAGATOR;
+	}
+	
+	@Override
+	public void addVillageCenters(CenterRegister register)
+	{
+		addNakagatorVillageCenters(register);
+	}
+	
+	@Override
+	public void addVillagePieces(PieceRegister register, Random random)
+	{
+		addNakagatorVillagePieces(register, random);
 	}
 }

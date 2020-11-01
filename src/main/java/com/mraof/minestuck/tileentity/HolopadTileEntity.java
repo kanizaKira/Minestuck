@@ -1,7 +1,7 @@
 package com.mraof.minestuck.tileentity;
 
-import com.mraof.minestuck.block.HolopadBlock;
 import com.mraof.minestuck.block.MSBlocks;
+import com.mraof.minestuck.block.machine.HolopadBlock;
 import com.mraof.minestuck.item.MSItems;
 import com.mraof.minestuck.item.crafting.alchemy.AlchemyHelper;
 import net.minecraft.block.Block;
@@ -28,7 +28,7 @@ public class HolopadTileEntity extends TileEntity implements ITickableTileEntity
 	
 	public HolopadTileEntity()
 	{
-		super(MSTileEntityTypes.HOLOPAD);
+		super(MSTileEntityTypes.HOLOPAD.get());
 	}
 	
 	public void onRightClick(PlayerEntity player)

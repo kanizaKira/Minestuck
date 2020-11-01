@@ -27,9 +27,9 @@ public class ClientProxy
 {
 	private static void registerRenderers()
 	{
-		ClientRegistry.bindTileEntityRenderer(MSTileEntityTypes.SKAIA_PORTAL, SkaiaPortalRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(MSTileEntityTypes.GATE, GateRenderer::new);
-		ClientRegistry.bindTileEntityRenderer(MSTileEntityTypes.HOLOPAD, HolopadRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(MSTileEntityTypes.SKAIA_PORTAL.get(), SkaiaPortalRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(MSTileEntityTypes.GATE.get(), GateRenderer::new);
+		ClientRegistry.bindTileEntityRenderer(MSTileEntityTypes.HOLOPAD.get(), HolopadRenderer::new);
 //		MinecraftForgeClient.registerItemRenderer(Minestuck.captchaCard, new CardRenderer());
 	}
 	
@@ -70,22 +70,21 @@ public class ClientProxy
 
 		RenderTypeLookup.setRenderLayer(MSBlocks.ALCHEMITER.TOTEM_PAD.get(), RenderType.getCutout());
 		RenderTypeLookup.setRenderLayer(MSBlocks.TOTEM_LATHE.DOWEL_ROD.get(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.HOLOPAD.getBlock(), RenderType.getCutoutMipped());
-		RenderTypeLookup.setRenderLayer(MSBlocks.CRUXITE_DOWEL.getBlock(), RenderType.getCutoutMipped());
-		RenderTypeLookup.setRenderLayer(MSBlocks.BLENDER.getBlock(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.CHESSBOARD.getBlock(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.MINI_FROG_STATUE.getBlock(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.GLOWYSTONE_DUST.getBlock(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.GOLD_SEEDS.getBlock(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.GLOWY_GOOP.getBlock(), RenderType.getSolid());
-		RenderTypeLookup.setRenderLayer(MSBlocks.COAGULATED_BLOOD.getBlock(), RenderType.getSolid());
-		RenderTypeLookup.setRenderLayer(MSBlocks.RAINBOW_SAPLING.getBlock(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.END_SAPLING.getBlock(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.GLOWING_MUSHROOM.getBlock(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.DESERT_BUSH.getBlock(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.BLOOMING_CACTUS.getBlock(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.PETRIFIED_GRASS.getBlock(), RenderType.getCutout());
-		RenderTypeLookup.setRenderLayer(MSBlocks.PETRIFIED_POPPY.getBlock(), RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.HOLOPAD, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.CRUXITE_DOWEL, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.BLENDER, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.CHESSBOARD, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.MINI_FROG_STATUE, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.CASSETTE_PLAYER, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.GLOWYSTONE_DUST, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.GOLD_SEEDS, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.RAINBOW_SAPLING, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.END_SAPLING, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.GLOWING_MUSHROOM, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.DESERT_BUSH, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.BLOOMING_CACTUS, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.PETRIFIED_GRASS, RenderType.getCutout());
+		RenderTypeLookup.setRenderLayer(MSBlocks.PETRIFIED_POPPY, RenderType.getCutout());
 
 		MSKeyHandler.registerKeys();
 		

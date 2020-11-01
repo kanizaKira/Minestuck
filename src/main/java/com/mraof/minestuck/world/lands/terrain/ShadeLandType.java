@@ -19,7 +19,12 @@ import net.minecraft.world.gen.feature.BlockClusterFeatureConfig;
 import net.minecraft.world.gen.feature.BlockStateFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
-import net.minecraft.world.gen.placement.*;
+import net.minecraft.world.gen.placement.ChanceConfig;
+import net.minecraft.world.gen.placement.CountRangeConfig;
+import net.minecraft.world.gen.placement.HeightWithChanceConfig;
+import net.minecraft.world.gen.placement.Placement;
+
+import java.util.Random;
 
 public class ShadeLandType extends TerrainLandType
 {
@@ -101,5 +106,17 @@ public class ShadeLandType extends TerrainLandType
 	public EntityType<? extends ConsortEntity> getConsortType()
 	{
 		return MSEntityTypes.SALAMANDER;
+	}
+	
+	@Override
+	public void addVillageCenters(CenterRegister register)
+	{
+		addSalamanderVillageCenters(register);
+	}
+	
+	@Override
+	public void addVillagePieces(PieceRegister register, Random random)
+	{
+		addSalamanderVillagePieces(register, random);
 	}
 }

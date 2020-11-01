@@ -33,7 +33,7 @@ public class GristCacheScreen extends PlayerStatsScreen
 		super.init();
 		this.previousButton = new ExtendedButton(this.xOffset + 8, this.yOffset + 8, 16, 16, "<", button -> prevPage());
 		this.nextButton = new ExtendedButton(this.xOffset + guiWidth - 24, this.yOffset + 8, 16, 16, ">", button -> nextPage());
-		if(GristTypes.REGISTRY.getValues().size() > rows * columns)
+		if(GristTypes.getRegistry().getValues().size() > rows * columns)
 		{
 			addButton(this.nextButton);
 		}
@@ -52,9 +52,9 @@ public class GristCacheScreen extends PlayerStatsScreen
 		this.blit(xOffset, yOffset, 0, 0, guiWidth, guiHeight);
 
 		String cacheMessage;
-		if (ClientEditHandler.isActive() || ClientPlayerData.title == null)
+		if(ClientEditHandler.isActive() || ClientPlayerData.getTitle() == null)
 			cacheMessage = getTitle().getFormattedText();
-		else cacheMessage = ClientPlayerData.title.asTextComponent().getFormattedText();
+		else cacheMessage = ClientPlayerData.getTitle().asTextComponent().getFormattedText();
 		mc.fontRenderer.drawString(cacheMessage, (this.width / 2F) - mc.fontRenderer.getStringWidth(cacheMessage) / 2F, yOffset + 12, 0x404040);
 		super.render(mouseX, mouseY, partialTicks);
 
@@ -86,7 +86,7 @@ public class GristCacheScreen extends PlayerStatsScreen
 	
 	private void nextPage()
 	{
-		int maxPage = (GristTypes.REGISTRY.getValues().size() - 1) / (rows * columns);
+		int maxPage = (GristTypes.getRegistry().getValues().size() - 1) / (rows * columns);
 		if(page < maxPage)
 		{
 			page++;

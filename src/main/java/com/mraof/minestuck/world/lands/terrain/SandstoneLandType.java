@@ -24,6 +24,8 @@ import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.FrequencyConfig;
 import net.minecraft.world.gen.placement.Placement;
 
+import java.util.Random;
+
 public class SandstoneLandType extends TerrainLandType
 {
 	public static final String SANDSTONE = "minestuck.sandstone";
@@ -150,6 +152,18 @@ public class SandstoneLandType extends TerrainLandType
 	public EntityType<? extends ConsortEntity> getConsortType()
 	{
 		return MSEntityTypes.TURTLE;
+	}
+	
+	@Override
+	public void addVillageCenters(CenterRegister register)
+	{
+		addTurtleVillageCenters(register);
+	}
+	
+	@Override
+	public void addVillagePieces(PieceRegister register, Random random)
+	{
+		addTurtleVillagePieces(register, random);
 	}
 	
 	public enum Variant

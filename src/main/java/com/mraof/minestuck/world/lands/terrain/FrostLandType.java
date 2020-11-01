@@ -22,6 +22,8 @@ import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.FrequencyConfig;
 import net.minecraft.world.gen.placement.Placement;
 
+import java.util.Random;
+
 public class FrostLandType extends TerrainLandType
 {
 	public static final String FROST = "minestuck.frost";
@@ -123,5 +125,17 @@ public class FrostLandType extends TerrainLandType
 	public EntityType<? extends ConsortEntity> getConsortType()
 	{
 		return MSEntityTypes.IGUANA;
+	}
+	
+	@Override
+	public void addVillageCenters(CenterRegister register)
+	{
+		addIguanaVillageCenters(register);
+	}
+	
+	@Override
+	public void addVillagePieces(PieceRegister register, Random random)
+	{
+		addIguanaVillagePieces(register, random);
 	}
 }

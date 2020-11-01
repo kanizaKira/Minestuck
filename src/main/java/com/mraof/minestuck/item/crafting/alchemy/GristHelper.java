@@ -1,5 +1,6 @@
 package com.mraof.minestuck.item.crafting.alchemy;
 
+import com.mraof.minestuck.MinestuckConfig;
 import com.mraof.minestuck.computer.editmode.EditData;
 import com.mraof.minestuck.computer.editmode.ServerEditHandler;
 import com.mraof.minestuck.entity.underling.UnderlingEntity;
@@ -21,8 +22,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
-import static com.mraof.minestuck.MinestuckConfig.showGristChanges;
-
 public class GristHelper
 {
 	private static Random random = new Random();
@@ -36,7 +35,8 @@ public class GristHelper
 		List<GristType> typeList = new ArrayList<>();
 		for(GristType type : GristTypes.values())
 		{
-			if(type.getRarity() > 0 && type != GristTypes.ARTIFACT.get())
+			//Artifact grist is a special case that is an underling type, but does not naturally spawn
+			if(type.isUnderlingType() && type != GristTypes.ARTIFACT.get())
 			{
 				typeList.add(type);
 				totalWeight += type.getRarity();
@@ -152,7 +152,7 @@ public class GristHelper
 	
 	public static void notify(MinecraftServer server, PlayerIdentifier player, GristSet set)
 	{
-		if(showGristChanges.get())
+		if(MinestuckConfig.SERVER.showGristChanges.get())
 		{
 			Map<GristType, Long> reqs = set.getMap();
 			for(Entry<GristType, Long> pairs : reqs.entrySet())
@@ -166,7 +166,7 @@ public class GristHelper
 	
 	public static void notifyEditPlayer(MinecraftServer server, PlayerIdentifier player, GristSet set, boolean increase)
 	{
-		if(showGristChanges.get())
+		if(MinestuckConfig.SERVER.showGristChanges.get())
 		{
 			SburbConnection sc = SkaianetHandler.get(server).getActiveConnection(player);
 			if(sc == null)

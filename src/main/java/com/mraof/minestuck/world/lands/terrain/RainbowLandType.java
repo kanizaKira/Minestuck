@@ -26,6 +26,8 @@ import net.minecraft.world.gen.placement.ChanceConfig;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
 
+import java.util.Random;
+
 public class RainbowLandType extends TerrainLandType
 {
 	public static final String RAINBOW = "minestuck.rainbow";
@@ -117,5 +119,17 @@ public class RainbowLandType extends TerrainLandType
 	public EntityType<? extends ConsortEntity> getConsortType()
 	{
 		return MSEntityTypes.TURTLE;
+	}
+	
+	@Override
+	public void addVillageCenters(CenterRegister register)
+	{
+		addTurtleVillageCenters(register);
+	}
+	
+	@Override
+	public void addVillagePieces(PieceRegister register, Random random)
+	{
+		addTurtleVillagePieces(register, random);
 	}
 }

@@ -23,6 +23,8 @@ import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
 
+import java.util.Random;
+
 public class EndLandType extends TerrainLandType
 {
 	public static final String END = "minestuck.end";
@@ -104,5 +106,17 @@ public class EndLandType extends TerrainLandType
 	public EntityType<? extends ConsortEntity> getConsortType()
 	{
 		return MSEntityTypes.NAKAGATOR;
+	}
+	
+	@Override
+	public void addVillageCenters(CenterRegister register)
+	{
+		addNakagatorVillageCenters(register);
+	}
+	
+	@Override
+	public void addVillagePieces(PieceRegister register, Random random)
+	{
+		addNakagatorVillagePieces(register, random);
 	}
 }

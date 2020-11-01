@@ -8,7 +8,7 @@ import com.mraof.minestuck.item.crafting.alchemy.AlchemyHelper;
 import com.mraof.minestuck.item.crafting.alchemy.GristSet;
 import com.mraof.minestuck.network.AlchemiterPacket;
 import com.mraof.minestuck.network.MSPacketHandler;
-import com.mraof.minestuck.tileentity.AlchemiterTileEntity;
+import com.mraof.minestuck.tileentity.machine.AlchemiterTileEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
@@ -25,7 +25,7 @@ public class AlchemiterScreen extends Screen implements Positioned
 	
 	private static final ResourceLocation guiBackground = new ResourceLocation("minestuck", "textures/gui/large_alchemiter.png");
 	private static final int guiWidth = 159, guiHeight = 102;
-	private AlchemiterTileEntity alchemiter;
+	private final AlchemiterTileEntity alchemiter;
 	private int itemQuantity;
 	
 	AlchemiterScreen(AlchemiterTileEntity te)
@@ -121,7 +121,7 @@ public class AlchemiterScreen extends Screen implements Positioned
 	{
 		//the amount the button changes the amount
 		int result = itemQuantity + change;
-		int maxCount = Math.min(999, alchemiter.getOutput().getMaxStackSize() * MinestuckConfig.alchemiterMaxStacks.get());
+		int maxCount = Math.min(999, alchemiter.getOutput().getMaxStackSize() * MinestuckConfig.SERVER.alchemiterMaxStacks.get());
 		
 		itemQuantity = MathHelper.clamp(result, 1, maxCount);
 	}

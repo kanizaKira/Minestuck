@@ -2,13 +2,11 @@ package com.mraof.minestuck.world.gen.feature.structure.village;
 
 import com.google.common.collect.Lists;
 import com.mraof.minestuck.block.MSBlocks;
-import com.mraof.minestuck.entity.MSEntityTypes;
 import com.mraof.minestuck.entity.consort.EnumConsort;
 import com.mraof.minestuck.world.gen.feature.MSStructurePieces;
 import com.mraof.minestuck.world.gen.feature.structure.blocks.StructureBlockRegistry;
+import com.mraof.minestuck.world.lands.ILandType;
 import com.mraof.minestuck.world.lands.LandTypePair;
-import com.mraof.minestuck.world.lands.terrain.RockLandType;
-import com.mraof.minestuck.world.lands.terrain.SandLandType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SlabBlock;
@@ -46,17 +44,9 @@ public class ConsortVillageCenter
 	{
 		List<CenterEntry> weightList = Lists.newArrayList();
 		
-		//TODO Let land types provide these instead
-		if(landTypes.terrain.getGroup().equals(RockLandType.GROUP_NAME))
-			weightList.add(new CenterEntry(RockCenter::new, 5));
-		if(landTypes.terrain.getGroup().equals(SandLandType.GROUP_NAME))
-			weightList.add(new CenterEntry(CactusPyramidCenter::new, 5));
-		if(landTypes.terrain.getConsortType().equals(MSEntityTypes.TURTLE))
-			weightList.add(new CenterEntry(TurtleVillagePieces.TurtleWellCenter::new, 5));
-		if(landTypes.terrain.getConsortType().equals(MSEntityTypes.NAKAGATOR))
-			weightList.add(new CenterEntry(NakagatorVillagePieces.RadioTowerCenter::new, 5));
-		if(landTypes.terrain.getConsortType().equals(MSEntityTypes.SALAMANDER))
-			weightList.add(new CenterEntry(SalamanderVillagePieces.RuinedTowerMushroomCenter::new, 5));
+		ILandType.CenterRegister register = (factory, weight) -> weightList.add(new CenterEntry(factory, weight));
+		landTypes.terrain.addVillageCenters(register);
+		landTypes.title.addVillageCenters(register);
 		
 		if(weightList.isEmpty())
 			return new ConsortVillageCenter.VillageMarketCenter(list, x, z, rand);

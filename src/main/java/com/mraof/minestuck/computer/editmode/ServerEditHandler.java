@@ -13,6 +13,7 @@ import com.mraof.minestuck.network.MSPacketHandler;
 import com.mraof.minestuck.network.ServerEditPacket;
 import com.mraof.minestuck.player.PlayerIdentifier;
 import com.mraof.minestuck.skaianet.SburbConnection;
+import com.mraof.minestuck.skaianet.SburbHandler;
 import com.mraof.minestuck.skaianet.SkaianetHandler;
 import com.mraof.minestuck.util.Debug;
 import com.mraof.minestuck.util.Teleport;
@@ -195,8 +196,8 @@ public final class ServerEditHandler	//TODO Consider splitting this class into t
 				player.sendMessage(new StringTextComponent(TextFormatting.RED+"Failed to activate edit mode."));
 				return;
 			}
-			if(c.inventory != null)
-				player.inventory.read(c.inventory);
+			if(c.getEditmodeInventory() != null)
+				player.inventory.read(c.getEditmodeInventory());
 			decoy.world.addEntity(decoy);
 			MSExtraData.get(player.world).addEditData(data);
 
@@ -211,7 +212,7 @@ public final class ServerEditHandler	//TODO Consider splitting this class into t
 	{
 		
 		double posX, posY = 0, posZ;
-		ServerWorld world = player.getServer().getWorld(c.hasEntered() ? c.getClientDimension() : c.getClientComputer().getDimension());
+		ServerWorld world = player.getServer().getWorld(c.hasEntered() ? c.getClientDimension() : c.getClientComputer().getPosForEditmode().getDimension());
 		
 		if(lastEditmodePos.containsKey(c))
 		{
@@ -270,7 +271,7 @@ public final class ServerEditHandler	//TODO Consider splitting this class into t
 
 	private static BlockPos getEditmodeCenter(SburbConnection connection)
 	{
-		GlobalPos computerPos = connection.getClientComputer();
+		GlobalPos computerPos = connection.getClientComputer().getPosForEditmode();
 		if(computerPos == null)
 			throw new IllegalStateException("Connection has to be active with a computer position to be used here");
 		if(connection.hasEntered())
@@ -289,7 +290,7 @@ public final class ServerEditHandler	//TODO Consider splitting this class into t
 			return;
 		
 		SburbConnection c = data.connection;
-		int range = MSDimensions.isLandDimension(player.dimension) ? MinestuckConfig.landEditRange.get() : MinestuckConfig.overworldEditRange.get();
+		int range = MSDimensions.isLandDimension(player.dimension) ? MinestuckConfig.SERVER.landEditRange.get() : MinestuckConfig.SERVER.overworldEditRange.get();
 		BlockPos center = getEditmodeCenter(c);
 
 		updateInventory(player, c);
@@ -316,7 +317,7 @@ public final class ServerEditHandler	//TODO Consider splitting this class into t
 					GristHelper.notifyEditPlayer(event.getPlayer().world.getServer(), data.connection.getClientIdentifier(), cost, false);
 					data.connection.setHasGivenItem(entry);
 					if(!data.connection.isMain())
-						SkaianetHandler.get(event.getPlayer().getServer()).giveItems(data.connection.getClientIdentifier());
+						SburbHandler.giveItems(event.getPlayer().getServer(), data.connection.getClientIdentifier());
 				}
 				else event.setCanceled(true);
 			}
@@ -389,7 +390,7 @@ public final class ServerEditHandler	//TODO Consider splitting this class into t
 			EditData data = getData(event.getPlayer());
 			BlockState block = event.getWorld().getBlockState(event.getPos());
 			if(block.getBlockHardness(event.getWorld(), event.getPos()) < 0 || block.getMaterial() == Material.PORTAL
-					|| (GristHelper.getGrist(event.getEntity().world, data.connection.getClientIdentifier(), GristTypes.BUILD) <= 0 && !MinestuckConfig.gristRefund.get()))
+					|| (GristHelper.getGrist(event.getEntity().world, data.connection.getClientIdentifier(), GristTypes.BUILD) <= 0 && !MinestuckConfig.SERVER.gristRefund.get()))
 				event.setCanceled(true);
 		}
 	}
@@ -409,7 +410,7 @@ public final class ServerEditHandler	//TODO Consider splitting this class into t
 		if(!event.getEntity().world.isRemote && getData(event.getPlayer()) != null)
 		{
 			EditData data = getData(event.getPlayer());
-			if(!MinestuckConfig.gristRefund.get())
+			if(!MinestuckConfig.SERVER.gristRefund.get())
 			{
 				GristHelper.decrease(event.getWorld(), data.connection.getClientIdentifier(), new GristSet(GristTypes.BUILD,1));
 				GristHelper.notifyEditPlayer(event.getWorld().getServer(), data.connection.getClientIdentifier(), new GristSet(GristTypes.BUILD, 1), false);
@@ -449,7 +450,7 @@ public final class ServerEditHandler	//TODO Consider splitting this class into t
 					GristSet cost = entry.getCurrentCost(c);
 					c.setHasGivenItem(entry);
 					if(!c.isMain())
-						SkaianetHandler.get(player.server).giveItems(c.getClientIdentifier());
+						SburbHandler.giveItems(player.server, c.getClientIdentifier());
 					if(!cost.isEmpty())
 					{
 						GristHelper.decrease(player.world, c.getClientIdentifier(), cost);
@@ -467,6 +468,20 @@ public final class ServerEditHandler	//TODO Consider splitting this class into t
 	
 	@SubscribeEvent(priority=EventPriority.NORMAL)
 	public static void onAttackEvent(AttackEntityEvent event)
+	{
+		if(!event.getEntity().world.isRemote && getData(event.getPlayer()) != null)
+			event.setCanceled(true);
+	}
+	
+	@SubscribeEvent(priority=EventPriority.NORMAL)
+	public static void onInteractEvent(PlayerInteractEvent.EntityInteract event)
+	{
+		if(!event.getEntity().world.isRemote && getData(event.getPlayer()) != null)
+			event.setCanceled(true);
+	}
+	
+	@SubscribeEvent(priority=EventPriority.NORMAL)
+	public static void onInteractEvent(PlayerInteractEvent.EntityInteractSpecific event)
 	{
 		if(!event.getEntity().world.isRemote && getData(event.getPlayer()) != null)
 			event.setCanceled(true);
